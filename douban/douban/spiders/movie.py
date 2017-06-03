@@ -34,7 +34,7 @@ class MovieSpider(scrapy.Spider):
         #url = 'https://movie.douban.com/subject/22263645/'
         #查询上次中断的id
         cnt = collection.find().count()
-        
+        #cnt = 22263644
         for id in range(cnt+1,22263646):
             find_one = self.collection.find_one({'_id':id})
             if find_one :
@@ -103,6 +103,12 @@ class MovieSpider(scrapy.Spider):
                         if attr:
                             attrs.append(attr)
             item['info'].append({'key':key,'value':attrs})
+        #电影简介
+        item['summary'] = []
+        summary = response.xpath('//*[@id="link-report"]/span[1]/text()').extract(default='')
+        for sel in summary:
+            item['summary'].append(sel.strip('\n').strip(' '))
+
         #save to mongo
         self.collection.insert(item)
         pass
