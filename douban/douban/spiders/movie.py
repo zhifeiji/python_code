@@ -105,9 +105,9 @@ class MovieSpider(scrapy.Spider):
             item['info'].append({'key':key,'value':attrs})
         #电影简介
         item['summary'] = []
-        summary = response.xpath('//*[@id="link-report"]/span[1]/text()').extract(default='')
+        summary = response.xpath('//*[@id="link-report"]/span[1]/text()').extract()
         for sel in summary:
-            item['summary'].append(sel.strip('\n').strip(' '))
+            item['summary'].append(sel.strip("\n").strip(' '))
 
         #save to mongo
         self.collection.insert(item)
