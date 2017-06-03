@@ -16,7 +16,7 @@ class MovieSpider(scrapy.Spider):
     #start_urls = ['http://movie.douban.com/']
 
     client = MongoClient("mongodb://127.0.0.1:27017/")
-    db = client.doban
+    db = client.douban
     collection = db.col_movie
 
     headers_movie = {
