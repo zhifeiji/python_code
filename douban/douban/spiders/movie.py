@@ -33,7 +33,7 @@ class MovieSpider(scrapy.Spider):
     def start_requests(self):
         #url = 'https://movie.douban.com/subject/22263645/'
         #查询上次中断的id
-        cnt = collection.find().count()
+        cnt = self.collection.find().count()
         #cnt = 22263644
         for id in range(cnt+1,22263646):
             find_one = self.collection.find_one({'_id':id})
