@@ -32,7 +32,10 @@ class MovieSpider(scrapy.Spider):
 
     def start_requests(self):
         #url = 'https://movie.douban.com/subject/22263645/'
-        for id in range(1,22263646):
+        #查询上次中断的id
+        cnt = collection.find().count()
+        
+        for id in range(cnt+1,22263646):
             find_one = self.collection.find_one({'_id':id})
             if find_one :
                 if find_one['http_status'] == 200 :
@@ -70,6 +73,12 @@ class MovieSpider(scrapy.Spider):
         item['rating_num'] = float(response.xpath('//*[@id="interest_sectl"]/div[1]/div[2]/strong/text()').extract_first(default='0').strip())
         #评价数
         item['votes'] = float(response.xpath('//*[@id="interest_sectl"]/div[1]/div[2]/div/div[2]/a/span/text()').extract_first(default='0').strip())
+        #标签
+        item['tags'] = []
+        tags = response.xpath('//*[@id="content"]/div[2]/div[2]/div[4]/div/a')
+        for sel in tags:
+            tag = sel.xpath('text()').extract_first().strip()
+            item['tags'].append(tag)
         #info
         info = response.xpath('//div[@id="info"]').extract_first()
         pattern = re.compile(r"<span class=\"pl\">(.*)<br>")
